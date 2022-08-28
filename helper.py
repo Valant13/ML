@@ -16,7 +16,7 @@ def showLossCurves(epochs, trainLosses, valLosses):
     plt.grid()
     plt.show()
 
-def printAccuracy(dataLoader, dataName):
+def printAccuracy(model, dataLoader, dataName):
     correct = 0
     total = 0
 
@@ -24,7 +24,7 @@ def printAccuracy(dataLoader, dataName):
         for data in dataLoader:
             images, labels = data
 
-            outputs = net(images)
+            outputs = model(images)
 
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
@@ -32,8 +32,8 @@ def printAccuracy(dataLoader, dataName):
 
     print(f'Accuracy of the network on the {total} {dataName} samples: {100 * correct // total} %')
 
-def showConfusionMatrix(dataLoader, classes):
-    confusionMatrix = __createConfusionMatrix(dataLoader, classes)
+def showConfusionMatrix(model, dataLoader, classes):
+    confusionMatrix = __createConfusionMatrix(model, dataLoader, classes)
 
     figure, ax = plt.subplots(figsize=(12, 8))
     image, cbar = __heatmap(confusionMatrix, classes, classes, ax=ax, cmap="magma_r", cbarlabel="Confusion matrix")
@@ -91,13 +91,13 @@ def __annotate_heatmap(im, data=None, valfmt="{x:.2f}", textcolors=("black", "wh
 
     return texts
 
-def __createConfusionMatrix(dataLoader, classes):
+def __createConfusionMatrix(model, dataLoader, classes):
     confusionMatrix = np.zeros((len(classes), len(classes)))
 
     with torch.no_grad():
         for data in dataLoader:
             images, labels = data
-            outputs = net(images)
+            outputs = model(images)
             _, predictions = torch.max(outputs, 1)
 
             for label, prediction in zip(labels, predictions):
