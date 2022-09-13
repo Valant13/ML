@@ -8,7 +8,9 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 
-def showLossCurves(epochs, trainLosses, valLosses):
+def showLossCurves(epochsCount, trainLosses, valLosses):
+    epochs = range(1, epochsCount + 1)
+
     figure(figsize=(8, 6))
     plt.plot(epochs, trainLosses, label='Train loss')
     plt.plot(epochs, valLosses, label='Val loss')
